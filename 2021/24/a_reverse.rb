@@ -69,34 +69,34 @@ class Alu
   end
 
   def optimize(instructions)
-##  instructions = instructions.reject do |ins|
-##    ins.op == :div && ins.args.last == 1
-##  end
+    instructions = instructions.reject do |ins|
+      ins.op == :div && ins.args.last == 1
+    end
 
-##  instructions = instructions.map do |ins|
-##    if ins.op == :mul && ins.args[1] == 0
-##      Instruction.new(:zer, ins.target)
-##    else
-##      ins
-##    end
-##  end
+    instructions = instructions.map do |ins|
+      if ins.op == :mul && ins.args[1] == 0
+        Instruction.new(:zer, ins.target)
+      else
+        ins
+      end
+    end
 
-##  instructions = instructions.each_with_index.map do |ins, i|
-##    peek_backward = instructions[i-1]
-##    peek_forward = instructions[i+1]
+    instructions = instructions.each_with_index.map do |ins, i|
+      peek_backward = instructions[i-1]
+      peek_forward = instructions[i+1]
 
-##    if ins.op == :eql && peek_forward&.op == :eql && ins.target == peek_forward&.target && peek_forward&.args[1] == 0
-##      Instruction.new(:not, *ins.args)
-##    elsif ins.op == :eql && peek_backward&.op == :eql && ins.target == peek_backward&.target && ins.args[1] == 0
-##      nil
-##    elsif ins.op == :zer && peek_forward&.op == :add && ins.target == peek_forward&.target
-##      nil
-##    elsif ins.op == :add && peek_backward&.op == :zer && ins.target == peek_backward&.target
-##      Instruction.new(:set, *ins.args)
-##    else
-##      ins
-##    end
-##  end.compact
+      if ins.op == :eql && peek_forward&.op == :eql && ins.target == peek_forward&.target && peek_forward&.args[1] == 0
+        Instruction.new(:not, *ins.args)
+      elsif ins.op == :eql && peek_backward&.op == :eql && ins.target == peek_backward&.target && ins.args[1] == 0
+        nil
+      elsif ins.op == :zer && peek_forward&.op == :add && ins.target == peek_forward&.target
+        nil
+      elsif ins.op == :add && peek_backward&.op == :zer && ins.target == peek_backward&.target
+        Instruction.new(:set, *ins.args)
+      else
+        ins
+      end
+    end.compact
 
     instructions.map! do |ins|
       spec_op = if ins.args.length > 1
